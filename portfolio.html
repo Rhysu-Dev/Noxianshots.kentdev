@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noxian Shots - Portfolio & Packages</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #d4af37;
+            --primary-hover: #fce8a6;
+            --bg-dark: #0d0d0d;
+            --card-bg: #141414;
+            --border-color: #2a2a2a;
+            --text-light: #ffffff;
+            --text-muted: #ccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--primary-hover);
+            padding: 30px 8%;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 25px;
+            position: relative;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            margin-top: 5px;
+            font-size: 1rem;
+        }
+
+        .back-btn {
+            background: linear-gradient(180deg, var(--primary), #8a6d1c);
+            color: #000;
+            padding: 10px 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 18px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        /* --- SECTION TITLES --- */
+        .section-title {
+            color: var(--primary);
+            margin: 40px 0 25px 0;
+            text-transform: uppercase;
+            font-size: 1.6rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- GALLERY GRID --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .media-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .media-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .media-container {
+            width: 100%;
+            height: 280px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .media-card img, 
+        .media-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 0;
+            display: block;
+        }
+
+        .media-info {
+            padding: 15px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .media-info h3 {
+            color: var(--text-light);
+            font-size: 1.05rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* --- PACKAGES GRID --- */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .package-card {
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 28px 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25);
+        }
+
+        .package-card h3 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 1.8rem;
+            color: var(--text-light);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .features-list li {
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            padding-left: 22px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .features-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .avail-btn {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .avail-btn:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+        }
+
+        /* --- MODAL POPUP --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: #181818;
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary);
+        }
+
+        .modal-content h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-dark);
+            border: 1px solid #333;
+            color: var(--text-light);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #28a745;
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>NOXIAN SHOTS</h1>
+        <p>Capturing Precious Moments — Weddings, Baptisms & Events</p>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Home / Logout</a>
+    </div>
+
+    <!-- PORTFOLIO MEDIA -->
+    <h2 class="section-title"><i class="fa-solid fa-camera"></i> Featured Work</h2>
+    <div class="gallery-grid" id="portfolioGallery"></div>
+
+    <!-- PACKAGES -->
+    <h2 class="section-title"><i class="fa-solid fa-gem"></i> Service Packages</h2>
+    <div class="packages-grid" id="portfolioPackages"></div>
+
+    <!-- AVAIL / BOOKING MODAL FORM -->
+    <div class="modal-overlay" id="availModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 id="modalPackageTitle">Avail Package</h3>
+            
+            <form id="bookingForm" onsubmit="handleFormSubmit(event)">
+                <input type="hidden" id="selectedPackage">
+                
+                <div class="form-group">
+                    <label for="clientName">Full Name *</label>
+                    <input type="text" id="clientName" required placeholder="e.g. Juan Dela Cruz">
+                </div>
+
+                <div class="form-group">
+                    <label for="clientContact">Contact Number / Email *</label>
+                    <input type="text" id="clientContact" required placeholder="e.g. 09123456789 or email@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="eventDate">Event Date *</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="eventVenue">Venue / Location *</label>
+                    <input type="text" id="eventVenue" required placeholder="e.g. Manaoag, Pangasinan">
+                </div>
+
+                <div class="form-group">
+                    <label for="eventNotes">Additional Details / Notes</label>
+                    <textarea id="eventNotes" rows="3" placeholder="Specify special requests..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Booking Request</button>
+            </form>
+
+            <div class="success-message" id="successMsg">
+                <i class="fa-solid fa-circle-check"></i> Thank you! Your request has been received. We will contact you shortly.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            initDefaultData();
+            renderAll();
+        };
+
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'noxian_media' || e.key === 'noxian_packages') {
+                renderAll();
+            }
+        });
+
+        function renderAll() {
+            loadGallery();
+            loadPackages();
+        }
+
+        function initDefaultData() {
+            if (!localStorage.getItem('noxian_media')) {
+                const defaultMedia = [
+                    { id: 1, title: 'Wedding Ceremony', type: 'photo', url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600' },
+                    { id: 2, title: 'Birthday Highlights', type: 'photo', url: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600' }
+                ];
+                localStorage.setItem('noxian_media', JSON.stringify(defaultMedia));
+            }
+
+            if (!localStorage.getItem('noxian_packages')) {
+                const defaultPackages = [
+                    { id: 1, name: 'Basic Event Package', price: 5000, features: ['1 Photographer', '4 Hours Coverage', 'All Soft Copies'] },
+                    { id: 2, name: 'Premium Wedding Package', price: 15000, features: ['2 Photographers + 1 Videographer', 'Full Day Coverage', 'A3 Photo Album', 'Same-Day Edit Video'] }
+                ];
+                localStorage.setItem('noxian_packages', JSON.stringify(defaultPackages));
+            }
+        }
+
+        function loadGallery() {
+            const savedMedia = JSON.parse(localStorage.getItem('noxian_media')) || [];
+            const gallery = document.getElementById('portfolioGallery');
+            gallery.innerHTML = '';
+
+            if (savedMedia.length === 0) {
+                gallery.innerHTML = '<p style="color:#888; grid-column: 1/-1; text-align:center;">No portfolio items available yet.</p>';
+                return;
+            }
+
+            savedMedia.forEach(item => {
+                let mediaElement = '';
+                if (item.type === 'photo') {
+                    mediaElement = `<img src="${item.url}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x250?text=Image+Not+Found'">`;
+                } else if (item.type === 'video') {
+                    mediaElement = `<video src="${item.url}" controls preload="metadata"></video>`;
+                }
+
+                gallery.innerHTML += `
+                    <div class="media-card">
+                        <div class="media-container">
+                            ${mediaElement}
+                        </div>
+                        <div class="media-info">
+                            <h3>${item.title || 'Untitled'}</h3>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function loadPackages() {
+            const savedPackages = JSON.parse(localStorage.getItem('noxian_packages')) || [];
+            const packagesContainer = document.getElementById('portfolioPackages');
+            packagesContainer.innerHTML = '';
+
+            if (savedPackages.length === 0) {
+                packagesContainer.innerHTML = '<p style="color:#888; grid-column: 1/-1; text-align:center;">No packages available at the moment.</p>';
+                return;
+            }
+
+            savedPackages.forEach(pkg => {
+                let featuresHtml = '';
+                let featList = [];
+                
+                if (Array.isArray(pkg.features)) {
+                    featList = pkg.features;
+                } else if (typeof pkg.features === 'string') {
+                    featList = pkg.features.split(',');
+                }
+
+                featList.forEach(feat => {
+                    if (feat.trim()) {
+                        featuresHtml += `<li>${feat.trim()}</li>`;
+                    }
+                });
+
+                packagesContainer.innerHTML += `
+                    <div class="package-card">
+                        <div>
+                            <h3>${pkg.name}</h3>
+                            <div class="price">₱${Number(pkg.price || 0).toLocaleString()}</div>
+                            <ul class="features-list">
+                                ${featuresHtml}
+                            </ul>
+                        </div>
+                        <button class="avail-btn" onclick="openModal('${pkg.name}', ${pkg.price})">Avail Package</button>
+                    </div>
+                `;
+            });
+        }
+
+        function openModal(packageName, price) {
+            document.getElementById('modalPackageTitle').innerText = `Avail ${packageName} (₱${Number(price).toLocaleString()})`;
+            document.getElementById('selectedPackage').value = packageName;
+            document.getElementById('availModal').style.display = 'flex';
+            document.getElementById('bookingForm').style.display = 'block';
+            document.getElementById('successMsg').style.display = 'none';
+        }
+
+        function closeModal() {
+            document.getElementById('availModal').style.display = 'none';
+            document.getElementById('bookingForm').reset();
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const pkg = document.getElementById('selectedPackage').value;
+            const name = document.getElementById('clientName').value;
+            const contact = document.getElementById('clientContact').value;
+            const date = document.getElementById('eventDate').value;
+            const venue = document.getElementById('eventVenue').value;
+            const notes = document.getElementById('eventNotes').value;
+
+            const now = new Date();
+            const dateReqFormatted = now.toLocaleDateString('en-CA') + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const bookings = JSON.parse(localStorage.getItem('noxian_bookings')) || [];
+            bookings.push({
+                id: Date.now(),
+                dateRequested: dateReqFormatted,
+                packageName: pkg,
+                clientName: name,
+                contact: contact,
+                eventDate: date,
+                venue: venue || 'N/A',
+                notes: notes || 'N/A',
+                status: 'Pending',
+                timestamp: now.toISOString()
+            });
+            localStorage.setItem('noxian_bookings', JSON.stringify(bookings));
+
+            document.getElementById('bookingForm').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'block';
+
+            setTimeout(() => {
+                closeModal();
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

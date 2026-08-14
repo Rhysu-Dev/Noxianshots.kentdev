@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noxian Shots - Control Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #080808;
+            color: #fce8a6;
+            padding: 30px;
+        }
+
+        /* --- HEADER & BUTTONS --- */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h1 {
+            color: #d4af37;
+        }
+
+        .return-btn {
+            background: linear-gradient(180deg, #d4af37, #8a6d1c);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .return-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #d4af37;
+            margin: 35px 0 15px 0;
+            text-transform: uppercase;
+            border-left: 4px solid #d4af37;
+            padding-left: 10px;
+        }
+
+        /* --- FORMS --- */
+        .form-card {
+            background: #141414;
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group input[type="text"], 
+        .form-group input[type="password"], 
+        .form-group input[type="number"], 
+        .form-group input[type="file"], 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .toggle-pass-btn {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #d4af37;
+            cursor: pointer;
+            font-size: 1.1rem;
+            user-select: none;
+        }
+
+        .help-text {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 4px;
+        }
+
+        .action-btn {
+            background: linear-gradient(180deg, #d4af37, #8a6d1c);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+        }
+
+        /* --- GRID LISTS --- */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+
+        .admin-item-card {
+            background: #181818;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .admin-preview {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background: #000;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        /* --- TABLE STYLE FOR CLIENT AVAILMENTS --- */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #141414;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+            min-width: 900px; /* Para 'di magsikip kapag madaming column */
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #282828;
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            background-color: #1f1f1f;
+            color: #d4af37;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .data-table tr:hover {
+            background-color: #1a1a1a;
+        }
+
+        .status-select {
+            background: #222;
+            color: #d4af37;
+            border: 1px solid #444;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .empty-text {
+            color: #777;
+            font-style: italic;
+            padding: 15px;
+            text-align: center;
+        }
+
+        /* --- CUSTOM CENTERED MODAL / NOTIFICATION --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: #121212;
+            border: 1px solid #d4af37;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 420px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.2);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.25s ease;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            color: #d4af37;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .modal-message {
+            font-size: 0.95rem;
+            color: #e0e0e0;
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            min-width: 90px;
+        }
+
+        .modal-btn-confirm {
+            background: linear-gradient(180deg, #d4af37, #8a6d1c);
+            color: #000;
+        }
+
+        .modal-btn-confirm:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .modal-btn-cancel {
+            background: #2a2a2a;
+            color: #ccc;
+            border: 1px solid #444;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #383838;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <div class="admin-header">
+            <h1>🛡️ Noxian Shots Control Panel</h1>
+            <button class="return-btn" onclick="goToMain()">← Return to Main Page</button>
+        </div>
+
+        <!-- 📋 CLIENT AVAILMENTS SECTION WITH VENUE AND NOTES -->
+        <h2 class="section-title">📋 Client Availments & Bookings</h2>
+        <div class="form-card table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date Requested</th>
+                        <th>Client Name</th>
+                        <th>Contact / Username</th>
+                        <th>Avail Package</th>
+                        <th>Event Date</th>
+                        <th>Venue / Location</th>
+                        <th>Additional Notes</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="clientAvailList">
+                    <!-- Dynamic Rows from LocalStorage -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 💳 PAYMENT & DONATION METHODS SECTION -->
+        <h2 class="section-title">💳 Payment & Donation Methods</h2>
+        <div class="form-card">
+            <div class="form-group">
+                <label>Method Name (e.g., GCash, Maya, Bank Transfer):</label>
+                <input type="text" id="payMethodName" placeholder="e.g., GCash / Maya">
+            </div>
+            <div class="form-group">
+                <label>Account Name / Recipient Name:</label>
+                <input type="text" id="payAccountName" placeholder="e.g., Juan Dela Cruz">
+            </div>
+            <div class="form-group">
+                <label>Account Number / Phone Number:</label>
+                <input type="text" id="payAccountNo" placeholder="e.g., 09123456789">
+            </div>
+            <div class="form-group">
+                <label>QR Code Image (Optional):</label>
+                <input type="file" id="payQrInput" accept="image/*">
+            </div>
+            <button class="action-btn" onclick="addPaymentMethod()">+ Save Payment Method</button>
+        </div>
+
+        <!-- PAYMENT METHODS LIST -->
+        <div class="admin-grid" id="adminPaymentList"></div>
+
+        <!-- 🗝️ MASTER KEY MANAGEMENT SECTION -->
+        <h2 class="section-title">👑 Manage Master Key</h2>
+        <div class="form-card">
+            <p class="help-text" style="margin-bottom: 15px; color: #d4af37;">
+                💡 Ang <b>Master Key</b> ay ang pangkalahatang susi para sa reset o emergency override sa system.
+            </p>
+            <div class="form-group">
+                <label>Current Master Key:</label>
+                <div class="password-wrapper">
+                    <input type="password" id="currMasterKeyInput" placeholder="Enter current master key">
+                    <button class="toggle-pass-btn" onclick="togglePassword('currMasterKeyInput', this)">👁️</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>New Master Key:</label>
+                <div class="password-wrapper">
+                    <input type="password" id="newMasterKeyInput" placeholder="Enter new master key">
+                    <button class="toggle-pass-btn" onclick="togglePassword('newMasterKeyInput', this)">👁️</button>
+                </div>
+            </div>
+            <button class="action-btn" onclick="updateMasterKey()">Update Master Key</button>
+        </div>
+
+        <!-- 👤 ADMIN USERNAME SECTION -->
+        <h2 class="section-title">👤 Change Admin Username</h2>
+        <div class="form-card">
+            <div class="form-group">
+                <label>New Admin Username:</label>
+                <input type="text" id="newUsernameInput" placeholder="Enter new admin username">
+            </div>
+            <div class="form-group">
+                <label>Confirm Admin Password:</label>
+                <div class="password-wrapper">
+                    <input type="password" id="confirmUserPassInput" placeholder="Enter current admin password to verify">
+                    <button class="toggle-pass-btn" onclick="togglePassword('confirmUserPassInput', this)">👁️</button>
+                </div>
+            </div>
+            <button class="action-btn" onclick="updateUsername()">Update Admin Username</button>
+        </div>
+
+        <!-- 🔑 ADMIN PASSWORD SECTION -->
+        <h2 class="section-title">🔑 Change Admin Password</h2>
+        <div class="form-card">
+            <div class="form-group">
+                <label>Current Admin Password:</label>
+                <div class="password-wrapper">
+                    <input type="password" id="currPassInput" placeholder="Enter current admin password">
+                    <button class="toggle-pass-btn" onclick="togglePassword('currPassInput', this)">👁️</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>New Password:</label>
+                <div class="password-wrapper">
+                    <input type="password" id="newPassInput" placeholder="Enter new password">
+                    <button class="toggle-pass-btn" onclick="togglePassword('newPassInput', this)">👁️</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Confirm New Password:</label>
+                <div class="password-wrapper">
+                    <input type="password" id="confirmPassInput" placeholder="Confirm new password">
+                    <button class="toggle-pass-btn" onclick="togglePassword('confirmPassInput', this)">👁️</button>
+                </div>
+            </div>
+            <button class="action-btn" onclick="updatePassword()">Update Admin Password</button>
+        </div>
+
+        <!-- 🎬 UPLOAD MEDIA SECTION -->
+        <h2 class="section-title">🎬 Upload Portfolio Media (Video / Photo)</h2>
+        <div class="form-card">
+            <div class="form-group">
+                <label>Media Title:</label>
+                <input type="text" id="mediaTitle" placeholder="e.g., Wedding Highlights 2026 / Binyag Reel">
+            </div>
+            <div class="form-group">
+                <label>Media Type:</label>
+                <select id="mediaType" onchange="updateAcceptType()">
+                    <option value="video">Video File (MP4, MOV, WebM)</option>
+                    <option value="photo">Photo File (JPG, PNG, WEBP)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Select File to Upload:</label>
+                <input type="file" id="mediaFileInput" accept="video/*">
+                <p class="help-text">💡 Tip: Pumili ng file galing sa iyong gallery o PC/laptop.</p>
+            </div>
+            <button class="action-btn" onclick="uploadMedia()">+ Upload Media to Portfolio</button>
+        </div>
+
+        <!-- MEDIA LIST -->
+        <div class="admin-grid" id="adminMediaList"></div>
+
+        <!-- 💎 PACKAGE MANAGEMENT SECTION -->
+        <h2 class="section-title">💎 Package Management</h2>
+        <div class="form-card">
+            <div class="form-group">
+                <label>Package Name:</label>
+                <input type="text" id="pkgName" placeholder="e.g., Wedding Platinum Package">
+            </div>
+            <div class="form-group">
+                <label>Price (PHP):</label>
+                <input type="number" id="pkgPrice" placeholder="15000">
+            </div>
+            <div class="form-group">
+                <label>Features (separate with commas):</label>
+                <textarea id="pkgFeatures" rows="3" placeholder="Full Wedding Video, 50 Edited Photos, Drone Shot"></textarea>
+            </div>
+            <button class="action-btn" onclick="addPackageAdmin()">+ Add Package</button>
+        </div>
+
+        <!-- PACKAGES LIST -->
+        <div class="admin-grid" id="adminPackageList"></div>
+    </div>
+
+    <!-- CUSTOM CENTERED MODAL / NOTIFICATION -->
+    <div class="modal-overlay" id="customModal">
+        <div class="modal-box">
+            <div class="modal-title" id="modalTitle">Notification</div>
+            <div class="modal-message" id="modalMessage">Message content goes here...</div>
+            <div class="modal-actions" id="modalActions">
+                <button class="modal-btn modal-btn-confirm" id="modalOkBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function goToMain() {
+        window.location.href = 'index.html';
+    }
+
+    let packages = JSON.parse(localStorage.getItem('noxian_packages')) || [];
+    let mediaItems = JSON.parse(localStorage.getItem('noxian_media')) || [];
+    let clientBookings = JSON.parse(localStorage.getItem('noxian_bookings')) || [];
+    let paymentMethods = JSON.parse(localStorage.getItem('noxian_payment_methods')) || [];
+
+    window.onload = function() {
+        renderPackages();
+        renderMedia();
+        renderClientAvailments();
+        renderPaymentMethods();
+
+        /* --- ADD ENTER KEY LISTENERS --- */
+        listenEnterKey(['payMethodName', 'payAccountName', 'payAccountNo'], addPaymentMethod);
+        listenEnterKey(['currMasterKeyInput', 'newMasterKeyInput'], updateMasterKey);
+        listenEnterKey(['newUsernameInput', 'confirmUserPassInput'], updateUsername);
+        listenEnterKey(['currPassInput', 'newPassInput', 'confirmPassInput'], updatePassword);
+        listenEnterKey(['mediaTitle'], uploadMedia);
+        listenEnterKey(['pkgName', 'pkgPrice', 'pkgFeatures'], addPackageAdmin);
+    };
+
+    function listenEnterKey(elementIds, callbackFunction) {
+        elementIds.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        callbackFunction();
+                    }
+                });
+            }
+        });
+    }
+
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.innerText = '🙈';
+        } else {
+            input.type = 'password';
+            btn.innerText = '👁️';
+        }
+    }
+
+    function showNotification(message, title = "Noxian Shots Notification") {
+        const modal = document.getElementById('customModal');
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalMessage').innerText = message;
+        
+        const actions = document.getElementById('modalActions');
+        actions.innerHTML = `<button class="modal-btn modal-btn-confirm" onclick="closeModal()">OK</button>`;
+        
+        modal.classList.add('active');
+    }
+
+    function showConfirm(message, onConfirm, title = "Confirmation Required") {
+        const modal = document.getElementById('customModal');
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalMessage').innerText = message;
+        
+        const actions = document.getElementById('modalActions');
+        actions.innerHTML = `
+            <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="modal-btn modal-btn-confirm" id="confirmBtn">OK</button>
+        `;
+        
+        document.getElementById('confirmBtn').onclick = function() {
+            closeModal();
+            onConfirm();
+        };
+
+        modal.classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('customModal').classList.remove('active');
+    }
+
+    function saveData() {
+        try {
+            localStorage.setItem('noxian_packages', JSON.stringify(packages));
+            localStorage.setItem('noxian_media', JSON.stringify(mediaItems));
+            localStorage.setItem('noxian_bookings', JSON.stringify(clientBookings));
+            localStorage.setItem('noxian_payment_methods', JSON.stringify(paymentMethods));
+        } catch (e) {
+            showNotification("Masyadong malaki ang file na in-upload!", "Error");
+        }
+    }
+
+    /* --- CLIENT AVAILMENTS FUNCTIONALITY WITH VENUE & NOTES --- */
+    function renderClientAvailments() {
+        const tableBody = document.getElementById('clientAvailList');
+        tableBody.innerHTML = '';
+
+        if (clientBookings.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="9" class="empty-text">Wala pang nag-aavail o nag-sesend ng booking inquiries.</td></tr>`;
+            return;
+        }
+
+        clientBookings.forEach((item, index) => {
+            const venue = item.venue || item.location || 'N/A';
+            const notes = item.notes || item.additional || item.requests || 'None';
+
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${item.dateSubmitted || 'N/A'}</td>
+                    <td style="color:#fff; font-weight:bold;">${item.clientName}</td>
+                    <td>${item.contact || item.username || 'N/A'}</td>
+                    <td style="color:#d4af37;">${item.packageName}</td>
+                    <td>${item.eventDate || 'N/A'}</td>
+                    <td style="color:#00e676;">${venue}</td>
+                    <td style="max-width:200px; word-wrap:break-word;">${notes}</td>
+                    <td>
+                        <select class="status-select" onchange="changeStatus(${index}, this.value)">
+                            <option value="Pending" ${item.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Confirmed" ${item.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                            <option value="Completed" ${item.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="delete-btn" style="margin-top:0; padding:4px 8px;" onclick="deleteBooking(${index})">Delete</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function changeStatus(index, newStatus) {
+        clientBookings[index].status = newStatus;
+        saveData();
+    }
+
+    function deleteBooking(index) {
+        showConfirm("Sigurado ka bang gusto mong burahin ang record na ito?", function() {
+            clientBookings.splice(index, 1);
+            saveData();
+            renderClientAvailments();
+        });
+    }
+
+    /* --- PAYMENT METHODS FUNCTIONALITY --- */
+    function renderPaymentMethods() {
+        const list = document.getElementById('adminPaymentList');
+        list.innerHTML = '';
+        if (paymentMethods.length === 0) {
+            list.innerHTML = `<p class="empty-text">Wala pang naidaragdag na payment method.</p>`;
+            return;
+        }
+
+        paymentMethods.forEach((item, index) => {
+            let qrPreview = item.qrUrl ? `<img src="${item.qrUrl}" class="admin-preview" alt="QR Code">` : '';
+            list.innerHTML += `
+                <div class="admin-item-card">
+                    ${qrPreview}
+                    <div>
+                        <h4 style="color:#d4af37">${item.methodName}</h4>
+                        <p style="color:#fff; margin-top:5px;">Account Name: <b>${item.accountName}</b></p>
+                        <p style="color:#aaa; font-size: 0.9rem;">Account No: ${item.accountNo}</p>
+                    </div>
+                    <button class="delete-btn" onclick="deletePaymentMethod(${index})">Delete</button>
+                </div>
+            `;
+        });
+    }
+
+    function addPaymentMethod() {
+        const name = document.getElementById('payMethodName').value.trim();
+        const accName = document.getElementById('payAccountName').value.trim();
+        const accNo = document.getElementById('payAccountNo').value.trim();
+        const qrInput = document.getElementById('payQrInput');
+        const file = qrInput.files[0];
+
+        if (!name || !accName || !accNo) {
+            showNotification("Mangyaring kumpletuhin ang Method Name, Account Name, at Account Number!", "Warning");
+            return;
+        }
+
+        const savePayment = (qrDataUrl = '') => {
+            paymentMethods.push({
+                id: Date.now(),
+                methodName: name,
+                accountName: accName,
+                accountNo: accNo,
+                qrUrl: qrDataUrl
+            });
+
+            saveData();
+            renderPaymentMethods();
+
+            document.getElementById('payMethodName').value = '';
+            document.getElementById('payAccountName').value = '';
+            document.getElementById('payAccountNo').value = '';
+            qrInput.value = '';
+
+            showNotification("Payment/Donation method saved successfully!", "Success");
+        };
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                savePayment(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            savePayment();
+        }
+    }
+
+    function deletePaymentMethod(index) {
+        showConfirm("Sigurado ka bang gusto mong burahin ang payment method na ito?", function() {
+            paymentMethods.splice(index, 1);
+            saveData();
+            renderPaymentMethods();
+        });
+    }
+
+    /* --- CHANGE MASTER KEY FUNCTIONALITY --- */
+    function updateMasterKey() {
+        const currMasterInput = document.getElementById('currMasterKeyInput').value;
+        const newMasterInput = document.getElementById('newMasterKeyInput').value;
+
+        const storedMasterKey = localStorage.getItem('noxian_master_key') || 'NOXIAN2026';
+
+        if (currMasterInput !== storedMasterKey) {
+            showNotification("Mali ang Kasalukuyang Master Key!", "Access Denied");
+            return;
+        }
+
+        if (!newMasterInput) {
+            showNotification("Maglagay ng bagong Master Key!", "Warning");
+            return;
+        }
+
+        localStorage.setItem('noxian_master_key', newMasterInput);
+        showNotification("Matagumpay na napalitan ang Master Key!", "Success");
+
+        document.getElementById('currMasterKeyInput').value = '';
+        document.getElementById('newMasterKeyInput').value = '';
+    }
+
+    /* --- CHANGE ADMIN USERNAME FUNCTIONALITY --- */
+    function updateUsername() {
+        const newUsername = document.getElementById('newUsernameInput').value.trim();
+        const confirmPass = document.getElementById('confirmUserPassInput').value;
+
+        const storedPass = localStorage.getItem('noxian_admin_pass') || 'admin123';
+
+        if (!newUsername) {
+            showNotification("Maglagay ng bagong Username!", "Warning");
+            return;
+        }
+
+        if (confirmPass !== storedPass) {
+            showNotification("Mali ang iyong Admin Password!", "Access Denied");
+            return;
+        }
+
+        localStorage.setItem('noxian_admin_user', newUsername);
+        showNotification("Matagumpay na napalitan ang Admin Username!", "Success");
+
+        document.getElementById('newUsernameInput').value = '';
+        document.getElementById('confirmUserPassInput').value = '';
+    }
+
+    /* --- CHANGE ADMIN PASSWORD FUNCTIONALITY --- */
+    function updatePassword() {
+        const currPassInput = document.getElementById('currPassInput').value;
+        const newPassInput = document.getElementById('newPassInput').value;
+        const confirmPassInput = document.getElementById('confirmPassInput').value;
+
+        const storedPass = localStorage.getItem('noxian_admin_pass') || 'admin123';
+
+        if (currPassInput !== storedPass) {
+            showNotification("Mali ang iyong Kasalukuyang Password!", "Access Denied");
+            return;
+        }
+
+        if (!newPassInput) {
+            showNotification("Maglagay ng bagong password!", "Warning");
+            return;
+        }
+
+        if (newPassInput !== confirmPassInput) {
+            showNotification("Hindi magkatugma ang New Password at Confirm Password!", "Warning");
+            return;
+        }
+
+        localStorage.setItem('noxian_admin_pass', newPassInput);
+        showNotification("Matagumpay na napalitan ang Admin Password!", "Success");
+
+        document.getElementById('currPassInput').value = '';
+        document.getElementById('newPassInput').value = '';
+        document.getElementById('confirmPassInput').value = '';
+    }
+
+    /* --- MEDIA & PACKAGES FUNCTIONALITY --- */
+    function updateAcceptType() {
+        const type = document.getElementById('mediaType').value;
+        const fileInput = document.getElementById('mediaFileInput');
+        if (type === 'video') {
+            fileInput.accept = 'video/*';
+        } else {
+            fileInput.accept = 'image/*';
+        }
+    }
+
+    function renderPackages() {
+        const list = document.getElementById('adminPackageList');
+        list.innerHTML = '';
+        packages.forEach((pkg, index) => {
+            list.innerHTML += `
+                <div class="admin-item-card">
+                    <div>
+                        <h4 style="color:#d4af37">${pkg.name}</h4>
+                        <p style="color:#fff; margin-top: 5px;">₱${Number(pkg.price).toLocaleString()}</p>
+                    </div>
+                    <button class="delete-btn" onclick="deletePackage(${index})">Delete</button>
+                </div>
+            `;
+        });
+    }
+
+    function renderMedia() {
+        const list = document.getElementById('adminMediaList');
+        list.innerHTML = '';
+        mediaItems.forEach((item, index) => {
+            let preview = '';
+            if (item.type === 'photo') {
+                preview = `<img src="${item.url}" class="admin-preview" alt="Preview">`;
+            } else if (item.type === 'video') {
+                preview = `<video src="${item.url}" class="admin-preview" controls></video>`;
+            }
+
+            list.innerHTML += `
+                <div class="admin-item-card">
+                    ${preview}
+                    <div>
+                        <h4 style="color:#fff; margin-top:5px;">${item.title}</h4>
+                        <p style="color:#aaa; font-size: 0.8rem;">Type: ${item.type.toUpperCase()}</p>
+                    </div>
+                    <button class="delete-btn" onclick="deleteMedia(${index})">Delete</button>
+                </div>
+            `;
+        });
+    }
+
+    function uploadMedia() {
+        const title = document.getElementById('mediaTitle').value.trim() || 'Untitled Media';
+        const type = document.getElementById('mediaType').value;
+        const fileInput = document.getElementById('mediaFileInput');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            showNotification("Pumili muna ng Video o Photo file na i-uupload!", "Warning");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const fileDataUrl = e.target.result;
+
+            mediaItems.push({
+                id: Date.now(),
+                title: title,
+                type: type,
+                url: fileDataUrl
+            });
+
+            saveData();
+            renderMedia();
+
+            document.getElementById('mediaTitle').value = '';
+            fileInput.value = '';
+            
+            showNotification("Media uploaded and saved successfully!", "Success");
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    function addPackageAdmin() {
+        const name = document.getElementById('pkgName').value || `Package ${packages.length + 1}`;
+        const price = document.getElementById('pkgPrice').value || 5000;
+        const featuresRaw = document.getElementById('pkgFeatures').value;
+        const features = featuresRaw ? featuresRaw.split(',') : ["Standard Coverage"];
+
+        packages.push({ id: Date.now(), name, price: parseInt(price), features });
+        
+        saveData();
+        renderPackages();
+        
+        document.getElementById('pkgName').value = '';
+        document.getElementById('pkgPrice').value = '';
+        document.getElementById('pkgFeatures').value = '';
+        
+        showNotification("New package added and saved!", "Success");
+    }
+
+    function deletePackage(index) {
+        showConfirm("Sigurado ka bang gusto mong burahin ang package na ito?", function() {
+            packages.splice(index, 1);
+            saveData();
+            renderPackages();
+        });
+    }
+
+    function deleteMedia(index) {
+        showConfirm("Sigurado ka bang gusto mong burahin ang media na ito?", function() {
+            mediaItems.splice(index, 1);
+            saveData();
+            renderMedia();
+        });
+    }
+    </script>
+</body>
+</html>

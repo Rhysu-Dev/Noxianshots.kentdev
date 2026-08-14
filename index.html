@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noxian Shots - Entry Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #050505;
+            padding: 10px;
+        }
+
+        .card-container {
+            position: relative;
+            width: 800px;
+            max-width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8),
+                        0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .card-bg {
+            width: 100%;
+            height: auto;
+            min-height: 400px; /* Dagdag para hindi mag-collapse sa mobile */
+            object-fit: cover;
+            display: block;
+        }
+
+        .btn-overlay {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            text-align: center;
+        }
+
+        .get-started-btn {
+            padding: 12px 32px;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #fce8a6;
+            background: linear-gradient(185deg, #1f1b13 0%, #080808 100%);
+            border: 2px solid #d4af37;
+            border-radius: 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .get-started-btn:hover {
+            color: #ffffff;
+            background: linear-gradient(185deg, #d4af37 0%, #8a6d1c 100%);
+            box-shadow: 0 0 25px rgba(252, 232, 166, 0.8);
+            transform: scale(1.08);
+        }
+
+        /* PROFILE & DONATION WRAPPER */
+        .top-nav-wrapper {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        /* DONATION BUTTON STYLING */
+        .donate-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(20, 20, 20, 0.85);
+            border: 2px solid #e74c3c;
+            color: #ff6b6b;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 12px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .donate-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: #ff6b6b;
+            transition: 0.3s;
+        }
+
+        .donate-btn:hover {
+            background: #e74c3c;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+            transform: scale(1.05);
+        }
+
+        .donate-btn:hover svg {
+            fill: #fff;
+        }
+
+        /* ADMIN PROFILE ICON CONTAINER & TOOLTIP */
+        .admin-profile-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-profile-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(10, 10, 10, 0.75);
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .admin-profile-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: #d4af37;
+            transition: 0.3s;
+        }
+
+        .admin-profile-btn:hover {
+            background: #d4af37;
+            box-shadow: 0 0 18px rgba(212, 175, 55, 0.8);
+            transform: scale(1.08);
+        }
+
+        .admin-profile-btn:hover svg {
+            fill: #000;
+        }
+
+        .admin-label-tag {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            font-size: 0.7rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 15px;
+        }
+
+        .modal-box {
+            background: #141414;
+            border: 2px solid #d4af37;
+            padding: 25px 30px;
+            border-radius: 12px;
+            text-align: center;
+            width: 360px;
+            max-width: 100%;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.35);
+            animation: popIn 0.3s ease;
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* FOR ADMIN ONLY BANNER IN MODAL */
+        .admin-only-badge {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px dashed #d4af37;
+            color: #fce8a6;
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .modal-title {
+            color: #d4af37;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* FORM INPUTS */
+        .input-group {
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            padding-right: 35px;
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #d4af37;
+        }
+
+        .toggle-pass-btn {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #d4af37;
+            cursor: pointer;
+            font-size: 1.1rem;
+            user-select: none;
+        }
+
+        .error-msg {
+            color: #ff4d4d;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 10px;
+            background: #d4af37;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+            margin-bottom: 8px;
+            transition: 0.2s;
+        }
+
+        .modal-btn:hover {
+            background: #fce8a6;
+        }
+
+        .forgot-btn {
+            background: transparent;
+            border: none;
+            color: #d4af37;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: block;
+            margin: 10px auto 0 auto;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        /* SUCCESS MODAL POPUP */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            padding: 15px;
+        }
+
+        .success-card {
+            background: linear-gradient(145deg, #181818, #0d0d0d);
+            border: 2px solid #d4af37;
+            border-radius: 16px;
+            padding: 35px 30px;
+            text-align: center;
+            width: 340px;
+            max-width: 100%;
+            box-shadow: 0 0 35px rgba(212, 175, 55, 0.4);
+            animation: popIn 0.3s ease;
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 15px auto;
+        }
+
+        .success-card h2 {
+            color: #d4af37;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .success-card p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        /* DONATION MODAL SPECIFIC STYLING */
+        .donate-box {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 25px rgba(255, 107, 107, 0.35);
+        }
+
+        .donate-box .modal-title {
+            color: #ff6b6b;
+        }
+
+        .payment-card {
+            background: #1c1c1c;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #333;
+            text-align: left;
+            font-size: 0.85rem;
+            color: #eee;
+        }
+
+        .payment-card h3 {
+            color: #ff6b6b;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        .payment-card img {
+            display: block;
+            margin: 10px auto 0 auto;
+            border-radius: 6px;
+            border: 1px solid #444;
+        }
+
+        /* ========================================================= */
+        /* 📱 MOBILE RESPONSIVE STYLES (PARA SA CELLPHONE)          */
+        /* ========================================================= */
+        @media screen and (max-width: 600px) {
+            .top-nav-wrapper {
+                top: 10px;
+                right: 10px;
+                gap: 6px;
+            }
+
+            .donate-btn {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+
+            .admin-label-tag {
+                display: none; /* Tinatago ang text na "FOR ADMIN ONLY" para kasya sa maliit na screen */
+            }
+
+            .admin-profile-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+            .get-started-btn {
+                padding: 10px 24px;
+                font-size: 0.85rem;
+                letter-spacing: 1px;
+            }
+
+            .card-bg {
+                min-height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <!-- TOP NAVIGATION WRAPPER (DONATION & ADMIN ACCESS) -->
+        <div class="top-nav-wrapper">
+            <!-- DONATION BUTTON -->
+            <button class="donate-btn" onclick="openDonateModal()" title="Support Noxian Shots">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                DONATE
+            </button>
+
+            <!-- PROFILE ICON FOR ADMIN ONLY ACCESS -->
+            <div class="admin-profile-wrapper">
+                <span class="admin-label-tag">FOR ADMIN ONLY</span>
+                <button class="admin-profile-btn" onclick="openAdminModal()" title="Admin Access">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <img src="bg.jpg" alt="Noxian Shots" class="card-bg">
+        <div class="btn-overlay">
+            <button class="get-started-btn" onclick="openPortfolio()">GET STARTED</button>
+        </div>
+    </div>
+
+    <!-- ADMIN MODAL -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-box">
+            <div class="admin-only-badge">🔒 RESTRICTED: FOR ADMIN ONLY</div>
+            
+            <h3 class="modal-title">Admin Portal</h3>
+            
+            <div id="loginSection">
+                <div class="input-group">
+                    <label>User / Contact:</label>
+                    <input type="text" id="loginInput" placeholder="Enter Admin User / Contact">
+                </div>
+                <div class="input-group">
+                    <label>Password:</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPass" placeholder="Enter Password">
+                        <button class="toggle-pass-btn" onclick="togglePassword('loginPass', this)">👁️</button>
+                    </div>
+                </div>
+
+                <div class="error-msg" id="loginError">⚠️ Invalid Credentials!</div>
+
+                <button class="modal-btn" onclick="loginAdmin()">LOGIN TO DASHBOARD</button>
+                <button class="forgot-btn" onclick="handleForgotPassword()">Forgot Password?</button>
+            </div>
+
+            <button class="close-btn" onclick="closeAdminModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- DONATION MODAL -->
+    <div class="modal-overlay" id="donateModal">
+        <div class="modal-box donate-box">
+            <h3 class="modal-title">💖 Support Noxian Shots</h3>
+            <p style="font-size: 0.85rem; color: #ccc; margin-bottom: 10px;">Salamat sa iyong suporta upang patuloy kaming makapagbigay ng magandang serbisyo!</p>
+            
+            <!-- CONTAINER PARA SA DYNAMIC PAYMENT METHODS -->
+            <div id="paymentMethodsContainer"></div>
+
+            <button class="close-btn" onclick="closeDonateModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div class="success-overlay" id="successModal">
+        <div class="success-card">
+            <div class="success-icon">✓</div>
+            <h2 id="successTitle">SUCCESSFUL</h2>
+            <p id="successMsg">Redirecting to Admin Dashboard...</p>
+        </div>
+    </div>
+
+    <script>
+        // Tawagin ang function kapag nag-load ang index.html
+        window.onload = function() {
+            loadPaymentMethods();
+
+            // Keyboard Enter Listener para sa Login
+            document.getElementById('loginInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') loginAdmin();
+            });
+            
+            document.getElementById('loginPass').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') loginAdmin();
+            });
+        };
+
+        /* --- IYONG CUSTOM PAYMENT METHODS FUNCTION --- */
+        function loadPaymentMethods() {
+            const paymentMethods = JSON.parse(localStorage.getItem('noxian_payment_methods')) || [];
+            const container = document.getElementById('paymentMethodsContainer');
+            
+            if(!container) return;
+            
+            container.innerHTML = '';
+            
+            if(paymentMethods.length === 0) {
+                container.innerHTML = '<p style="font-size:0.85rem; color:#888; padding:10px;">No payment/donation methods available.</p>';
+                return;
+            }
+            
+            paymentMethods.forEach(method => {
+                let qrImg = method.qrUrl ? `<img src="${method.qrUrl}" alt="${method.methodName} QR" style="max-width:150px;">` : '';
+                
+                container.innerHTML += `
+                    <div class="payment-card">
+                        <h3>${method.methodName}</h3>
+                        <p>Account Name: <b>${method.accountName}</b></p>
+                        <p>Account No: <b>${method.accountNo}</b></p>
+                        ${qrImg}
+                    </div>
+                `;
+            });
+        }
+
+        function openPortfolio() {
+            window.location.href = 'portfolio.html';
+        }
+
+        function openAdminModal() {
+            document.getElementById('adminModal').style.display = 'flex';
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        function openDonateModal() {
+            loadPaymentMethods(); // Ina-update ang list tuwing bubuksan ang donation modal
+            document.getElementById('donateModal').style.display = 'flex';
+        }
+
+        function closeDonateModal() {
+            document.getElementById('donateModal').style.display = 'none';
+        }
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerText = '🙈';
+            } else {
+                input.type = 'password';
+                btn.innerText = '👁️';
+            }
+        }
+
+        function loginAdmin() {
+            const userInput = document.getElementById('loginInput').value.trim();
+            const passInput = document.getElementById('loginPass').value.trim();
+            const errorMsg = document.getElementById('loginError');
+
+            const savedUser = localStorage.getItem('noxian_admin_user') || "";
+            const savedPass = localStorage.getItem('noxian_admin_pass') || "admin123";
+
+            const isUserMatch = savedUser ? (userInput.toLowerCase() === savedUser.toLowerCase()) : true;
+            const isPassMatch = (passInput === savedPass);
+
+            if (userInput !== "" && isUserMatch && isPassMatch) {
+                closeAdminModal();
+                showSuccess("LOGIN SUCCESSFUL", "Redirecting to Admin Dashboard...");
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 1500);
+            } else {
+                errorMsg.innerText = "⚠️ Maling User / Contact o Password!";
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function showSuccess(title, msg) {
+            document.getElementById('successTitle').innerText = title;
+            document.getElementById('successMsg').innerText = msg;
+            document.getElementById('successModal').style.display = 'flex';
+        }
+
+        function handleForgotPassword() {
+            const recoveryPin = prompt("🔑 Admin Security Check:\nPakilagay ang Secret Master Key:");
+            
+            if (!recoveryPin) return;
+
+            const storedMasterKey = localStorage.getItem('noxian_master_key') || 'NOXIAN2026';
+
+            if (recoveryPin.trim() === storedMasterKey) {
+                localStorage.setItem('noxian_admin_pass', 'admin123');
+                alert(`✅ Access Granted!\n\nTemporary Password Reset: admin123\n\nMaaari mo na itong gamitin para mag-login.`);
+            } else {
+                alert("❌ ACCESS DENIED: Mali ang Secret Master Key!");
+            }
+        }
+    </script>
+</body>
+</html>
